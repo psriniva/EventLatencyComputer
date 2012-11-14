@@ -25,10 +25,14 @@ public class EventFileReader {
     public static final String EVENT_TIME_STAMP = "EventTimeStamp";
     public static final String EVENT_DATA = "EventData";
     public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    private int debug_counter;
+    private int debug_events_counter;
 
     public EventFileReader(String file_name) throws FileNotFoundException {
         this.file_name = file_name;
         this.reader = new BufferedReader(new FileReader(file_name));
+        debug_counter = 0;
+        debug_events_counter = 0;
 
     }
 
@@ -38,6 +42,8 @@ public class EventFileReader {
             return null;
         }
         //System.out.println(nextLine);
+        debug_counter++;
+        //System.out.println("lines read = " + debug_counter);
         return nextLine;
     }
 
@@ -45,6 +51,8 @@ public class EventFileReader {
         String line = getNextLine();
         while (line != null) {
             if (line.startsWith(EVENT_PREFIX)) {
+                debug_events_counter++;
+                //System.out.println("events count = " + debug_events_counter);
                 return line;
             } else {
                 line = getNextLine();
@@ -130,5 +138,14 @@ public class EventFileReader {
         } else {
             throw new Exception("Dont know what type of node this is " + rootNode.toString());
         }
+    }
+
+
+    public int getLinesRead() {
+        return debug_counter;
+    }
+
+    public int getEventsRead() {
+        return debug_events_counter;
     }
 }

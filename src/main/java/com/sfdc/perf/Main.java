@@ -33,6 +33,8 @@ public class Main {
             computeLatencies(eventData);
 
         }
+        System.out.println("Events processed: " + eventFileReader.getEventsRead());
+        System.out.println("Input lines read: " + eventFileReader.getLinesRead());
     }
 
     public void computeLatencies(HashMap<String, String> eventData) throws Exception {
@@ -52,6 +54,9 @@ public class Main {
         Main main = new Main(
                 System.getProperty("events.log.file", "src/main/resources/test_events.dat"),
                 System.getProperty("output.file", "latencies.out"));
+//        Main main = new Main(
+//                System.getProperty("events.log.file", "src/main/resources/streaming1.log"),
+//                System.getProperty("output.file", "latencies.out"));
         main.readAndProcessEvents();
     }
 
