@@ -27,12 +27,14 @@ public class Main {
 
     public void readAndProcessEvents() throws Exception {
         String eventLine;
+        openOutputFile();
         while ((eventLine = eventFileReader.getNextEventLine()) != null) {
             HashMap<String, String> eventData =
                     eventFileReader.getEventTimeStampAndEventData(eventLine);
             computeLatencies(eventData);
 
         }
+        closeOutputFile();
         System.out.println("Events processed: " + eventFileReader.getEventsRead());
         System.out.println("Input lines read: " + eventFileReader.getLinesRead());
     }
@@ -43,11 +45,9 @@ public class Main {
                 eventFileReader.getOccurrencesOfCreatedDate(eventData.get(EventFileReader.EVENT_DATA));
         ArrayList<Long> latencies =
                 EventUtils.timeDiff(initialTime, finalTimes, new SimpleDateFormat(EventFileReader.DATE_FORMAT));
-        openOutputFile();
         for (int i = 0; i < latencies.size(); i++) {
             writeData(latencies.get(i).toString() + "\n");
         }
-        closeOutputFile();
     }
 
     public static void main(String[] args) throws Exception {
