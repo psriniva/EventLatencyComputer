@@ -25,6 +25,8 @@ public class EventFileReader {
     public static final String EVENT_TIME_STAMP = "EventTimeStamp";
     public static final String EVENT_DATA = "EventData";
     public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    public static final String DATE_FORMAT2 = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+
     private int debug_counter;
     private int debug_events_counter;
 

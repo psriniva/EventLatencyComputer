@@ -11,6 +11,8 @@ import java.util.HashMap;
  *         Time: 3:37 PM
  */
 public class Main {
+    //TODO:  FIX THE BELOW DECLARATION TO BE IN A CONFIG FILE INSTEAD OF THE CODE!
+    private static boolean CHATTER = true;
     private final String eventFileName;
     private final EventFileReader eventFileReader;
     private final String outputFileName;
@@ -43,20 +45,35 @@ public class Main {
         String initialTime = eventData.get(EventFileReader.EVENT_TIME_STAMP);
         ArrayList<String> finalTimes =
                 eventFileReader.getOccurrencesOfCreatedDate(eventData.get(EventFileReader.EVENT_DATA));
-        ArrayList<Long> latencies =
-                EventUtils.timeDiff(initialTime, finalTimes, new SimpleDateFormat(EventFileReader.DATE_FORMAT));
+        ArrayList<Long> latencies = null;
+        if (CHATTER) {
+            latencies = EventUtils.timeDiff(initialTime,
+                    finalTimes,
+                    new SimpleDateFormat(EventFileReader.DATE_FORMAT));
+        } else {
+            //replace the "+0000" in other sfdc date format with a Z :)
+            //TODO:  This needs to be generalized?
+            ArrayList<String> finalTimes_2 = new ArrayList<String>(finalTimes.size());
+            for (String dateString : finalTimes) {
+                finalTimes_2.add(dateString.replace("+0000", "Z"));
+            }
+            latencies = EventUtils.timeDiff(initialTime, finalTimes_2,
+                    new SimpleDateFormat(EventFileReader.DATE_FORMAT),
+                    new SimpleDateFormat(EventFileReader.DATE_FORMAT));
+        }
+
         for (int i = 0; i < latencies.size(); i++) {
             writeData(latencies.get(i).toString() + "\n");
         }
     }
 
     public static void main(String[] args) throws Exception {
-        Main main = new Main(
-                System.getProperty("events.log.file", "src/main/resources/test_events.dat"),
-                System.getProperty("output.file", "latencies.out"));
 //        Main main = new Main(
-//                System.getProperty("events.log.file", "src/main/resources/streaming1.log"),
+//                System.getProperty("events.log.file", "src/main/resources/test_events.dat"),
 //                System.getProperty("output.file", "latencies.out"));
+        Main main = new Main(
+                System.getProperty("events.log.file", "/Users/psrinivasan/streaming_0_0.log"),
+                System.getProperty("output.file", "/Users/psrinivasan/projects/EventLatencyComputer/target/foo"));
         main.readAndProcessEvents();
     }
 
